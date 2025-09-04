@@ -1,0 +1,5 @@
+export const enviroment = {
+  API_URL: "http://5.189.174.76:41337/api",
+  TOKEN:
+    "8e82905bfc9b6bc2b72ee8681a0e3cddd4afa88d7a5eb34473b64c17e67bd42abd93722bde508577eea3d21e1c66e2a9133f97483c2885bc1a337696d8a10c78e3f51a107ed8c4575ac2c6e1fcb9a610e4563ea2f53b1dc1a2fbad9eaff2ff20a8b730b3ca9c8caa740d4752fb44d710779bbfe5a6ff6e14f4737cd92bea8e9f",
+};

@@ -1,0 +1,183 @@
+import * as React from "react";
+import { StyleSheet } from "react-native";
+import { Button } from "react-native-paper";
+import { hp, wp } from "../../helpers";
+
+const QrScannerStyles = StyleSheet.create({
+  info_container: {
+    backgroundColor: "#fffffff",
+    height: "100%",
+    width: "100%",
+    marginTop: "15%",
+  },
+  info_header: {
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "20%",
+  },
+  info_header_logo: {
+    height: 100,
+    width: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  info_header_text: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 18,
+    marginLeft: "8%",
+  },
+  info_header_text_bold: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 16,
+    marginLeft: "2%",
+    color: "rgba(96, 93, 102, 1)",
+  },
+  info_text: {
+    marginLeft: "6%",
+    marginRight: "6%",
+    marginTop: "4%",
+    textAlign: "left",
+  },
+  edit_image: {
+    position: "absolute",
+    bottom: 0,
+    paddingLeft: "30%",
+    zIndex: 9999,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  message: {
+    textAlign: "center",
+    paddingBottom: 20,
+  },
+  camera: {
+    flex: 1,
+    backgroundColor: "transparent",
+    flexDirection: "row",
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "transparent",
+    margin: 20,
+  },
+  empty_button: {
+    flex: 1,
+    alignSelf: "flex-end",
+    alignItems: "flex-start",
+  },
+  shot_photo: {
+    flex: 1,
+    alignSelf: "flex-end",
+    alignItems: "center",
+  },
+  flip_camera: {
+    flex: 1,
+    alignSelf: "flex-end",
+    alignItems: "flex-end",
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+  },
+  imageContainer: {
+    flex: 1,
+    paddingTop: 58,
+  },
+  image: {
+    width: 320,
+    height: 440,
+    borderRadius: 18,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scanArea: {
+    width: 250,
+    height: 250,
+    borderWidth: 0,
+  },
+  cornerTopLeft: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: 30,
+    height: 30,
+    borderTopWidth: 4,
+    borderLeftWidth: 4,
+    borderColor: "white",
+    borderTopLeftRadius: 8,
+  },
+  cornerTopRight: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    width: 30,
+    height: 30,
+    borderTopWidth: 4,
+    borderRightWidth: 4,
+    borderColor: "white",
+    borderTopRightRadius: 8,
+  },
+  cornerBottomLeft: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: 30,
+    height: 30,
+    borderBottomWidth: 4,
+    borderLeftWidth: 4,
+    borderColor: "white",
+    borderBottomLeftRadius: 8,
+  },
+  cornerBottomRight: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 30,
+    height: 30,
+    borderBottomWidth: 4,
+    borderRightWidth: 4,
+    borderColor: "white",
+    borderBottomRightRadius: 8,
+  },
+  loaderOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+  },
+  loadingContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#333",
+  },
+});
+
+export default QrScannerStyles;
