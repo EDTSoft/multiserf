@@ -11,6 +11,7 @@
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
+      "imageWidth": 200,
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -19,6 +20,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
+        "monochromeImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
@@ -36,6 +38,19 @@
           "cameraPermission": "$(PRODUCT_NAME) require permiso para acceder a su cámara",
           "microphonePermission": "$(PRODUCT_NAME) require permiso para acceder a su micrófono",
           "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "dark": {
+            "image": "./assets/images/splash-icon-dark.png",
+            "backgroundColor": "#000000"
+          }
         }
       ]
     ],

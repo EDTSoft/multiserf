@@ -26,7 +26,7 @@ export default function TabLayout() {
         headerShown: false,
       }}
     >
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="two"
         options={{
           title: "Acreditar",
@@ -48,7 +48,7 @@ export default function TabLayout() {
             </Link>
           ),
         }}
-      />
+      />*/}
       <Tabs.Screen
         name="index"
         options={{
