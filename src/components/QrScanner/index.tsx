@@ -25,11 +25,13 @@ export type CameraState =
   | "fail";
 
 interface QrScannerProps {
+  scanningOperation?: (operation: boolean) => void;
   onCameraStateChange?: (state: CameraState) => void;
   navigateTrigger?: (url: string, data: any) => void;
 }
 
 const QrScanner: React.FC<QrScannerProps> = ({
+  scanningOperation,
   onCameraStateChange,
   navigateTrigger,
 }) => {
@@ -46,6 +48,8 @@ const QrScanner: React.FC<QrScannerProps> = ({
   const cameraRef = React.useRef<CameraView | null>(null);
 
   React.useEffect(() => {
+    scanningOperation?.(scanned);
+
     if (cameraFail) {
       onCameraStateChange?.("fail");
       return;
@@ -68,7 +72,7 @@ const QrScanner: React.FC<QrScannerProps> = ({
     if (isCameraReady) {
       onCameraStateChange?.("ready");
     }
-  }, [isFocused, isCameraReady, cameraFail, permission]);
+  }, [isFocused, isCameraReady, cameraFail, permission, scanned]);
 
   const handleScan = (result: BarcodeScanningResult) => {
     if (!scanned) {
@@ -194,7 +198,7 @@ const QrScanner: React.FC<QrScannerProps> = ({
 
         <Toast
           visible={visibleToast}
-          position={Toast.positions.CENTER}
+          position={Toast.positions.BOTTOM}
           shadow={true}
           animation={true}
           hideOnPress={false}
