@@ -1,3 +1,5 @@
+import { Meta } from "./Pagination";
+
 export interface Inscription {
   id: number;
   documentId: string;
@@ -9,4 +11,10 @@ export interface Inscription {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+}
+
+
+export interface GetInscriptionsResponse {
+  data: Credential[];
+  meta: Meta;
 }

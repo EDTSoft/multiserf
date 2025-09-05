@@ -1,35 +1,214 @@
-import { StyleSheet } from "react-native";
+import { getCredentials } from "@/src/api/credentialApi";
+import { getInscriptions } from "@/src/api/inscriptionApi";
+import { getPersons } from "@/src/api/personApi";
+import { wp } from "@/src/helpers";
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  Pressable,
+} from "react-native";
 
-import EditScreenInfo from "@/src/components/EditScreenInfo";
-import { Text, View } from "@/src/components/Themed";
-
-export default function TabOneScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+const HomeScreen = () => {
+  const [persons, setPersons] = React.useState<string | number>(0);
+  const [inscriptions, setInscriptions] = React.useState<string | number>(0);
+  const [credentialsUsed, setCredentialsUsed] = React.useState<string | number>(
+    0
   );
-}
+  const [credentialsAvailable, setCredentialsAvailable] = React.useState<
+    string | number
+  >(0);
+
+  const [fetchingPersons, setFetchingPersons] = React.useState(true);
+  const [fetchingInscriptions, setFetchingInscriptions] = React.useState(true);
+  const [fetchingCredentialsUsed, setFetchingCredentialsUsed] =
+    React.useState(true);
+  const [fetchingCredentialsAvailable, setFetchingCredentialsAvailable] =
+    React.useState(true);
+
+  React.useEffect(() => {
+    fetchPersons();
+    fetchCredentialsAvailable();
+    fetchCredentialsUsed();
+    fetchInscriptions();
+  }, []);
+
+  const fetchPersons = async () => {
+    setFetchingPersons(true);
+    const response = await getPersons()
+      .then((resp) => {
+        return resp.meta.pagination.total;
+      })
+      .catch((reason) => {
+        return 0;
+      });
+    setPersons(response);
+    setFetchingPersons(false);
+  };
+
+  const fetchCredentialsAvailable = async () => {
+    setFetchingCredentialsAvailable(true);
+    const params = "?filters[persona][$null]=true";
+    const response = await getCredentials(params)
+      .then((resp) => {
+        return resp.meta.pagination.total;
+      })
+      .catch((reason) => {
+        return 0;
+      });
+    setCredentialsAvailable(response);
+    setFetchingCredentialsAvailable(false);
+  };
+
+  const fetchCredentialsUsed = async () => {
+    setFetchingCredentialsUsed(true);
+    const params = "?filters[persona][$notNull]=true";
+    const response = await getCredentials(params)
+      .then((resp) => {
+        return resp.meta.pagination.total;
+      })
+      .catch((reason) => {
+        return 0;
+      });
+    setCredentialsUsed(response);
+    setFetchingCredentialsUsed(false);
+  };
+
+  const fetchInscriptions = async () => {
+    setFetchingInscriptions(true);
+    const response = await getInscriptions()
+      .then((resp) => {
+        return resp.meta.pagination.total;
+      })
+      .catch((reason) => {
+        return 0;
+      });
+    setInscriptions(response);
+    setFetchingInscriptions(false);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Image
+          source={require("../../assets/images/multiserflogo.jpg")}
+          style={styles.headerImage}
+          resizeMode="contain"
+        />
+      </View>
+
+      <View style={styles.statsContainer}>
+        <Pressable
+          style={styles.statCard}
+          onPress={() => (!fetchingPersons ? fetchPersons() : null)}
+        >
+          <View>
+            <Text style={styles.statLabel}>Personas</Text>
+            <Text style={styles.statValue}>
+              {fetchingPersons ? "..." : persons}
+            </Text>
+          </View>
+        </Pressable>
+
+        <Pressable
+          style={styles.statCard}
+          onPress={() => (!fetchingInscriptions ? fetchInscriptions() : null)}
+        >
+          <View>
+            <Text style={styles.statLabel}>Inscripciones</Text>
+            <Text style={styles.statValue}>
+              {fetchingInscriptions ? "..." : inscriptions}
+            </Text>
+          </View>
+        </Pressable>
+
+        <Pressable
+          style={styles.statCard}
+          onPress={() =>
+            !fetchingCredentialsUsed ? fetchCredentialsUsed() : null
+          }
+        >
+          <View>
+            <Text style={styles.statLabel}>Credenciales asignadas</Text>
+            <Text style={styles.statValue}>
+              {fetchingCredentialsUsed ? "..." : credentialsUsed}
+            </Text>
+          </View>
+        </Pressable>
+
+        <Pressable
+          style={styles.statCard}
+          onPress={() =>
+            !fetchingCredentialsAvailable ? fetchCredentialsAvailable() : null
+          }
+        >
+          <View>
+            <Text style={styles.statLabel}>Credenciales disponibles</Text>
+            <Text style={styles.statValue}>
+              {fetchingCredentialsAvailable ? "..." : credentialsAvailable}
+            </Text>
+          </View>
+        </Pressable>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f9f9f9",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  header: {
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 16,
+    paddingVertical: 10,
+  },
+  headerImage: {
+    width: wp(90),
+    height: wp(90),
   },
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 20,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  statsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  statCard: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    width: "48%",
+    alignItems: "flex-start",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 4,
+  },
+  statValue: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#1a73e8",
   },
 });
+
+export default HomeScreen;
