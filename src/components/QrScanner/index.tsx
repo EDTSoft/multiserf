@@ -11,10 +11,10 @@ import {
   useCameraPermissions,
 } from "expo-camera";
 import { wp } from "../../helpers";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "expo-router/react-navigation";
 import { isValidQrCodeObject } from "@/src/helpers/validator";
-import { getCredentials } from "@/src/api/credentialApi";
-import Toast from "react-native-root-toast";
+import { getCredentialWithPersonByCode } from "@/src/api/credentialApi";
+import { useSnackbar } from "@/src/components/SnackbarProvider";
 
 export type CameraState =
   | "idle"
@@ -39,9 +39,8 @@ const QrScanner: React.FC<QrScannerProps> = ({
   const [isCameraReady, setIsCameraReady] = React.useState(false);
   const [cameraFail, setCameraFail] = React.useState(false);
   const [facing, setFacing] = React.useState<CameraType>("back");
-  const [visibleToast, setVisibleToast] = React.useState(false);
-  const [textToast, setTextToast] = React.useState("");
   const [scanned, setScanned] = React.useState(false);
+  const { showSnackbar } = useSnackbar();
 
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -80,11 +79,10 @@ const QrScanner: React.FC<QrScannerProps> = ({
       setScanned(true);
       if (isValidQrCodeObject(data)) {
         const obj = JSON.parse(data);
-        const params = `?filters[code][$eq]=${obj.code}&populate[persona][populate][0]=inscription`;
-        getCredentials(params)
+        getCredentialWithPersonByCode(obj.code)
           .then(({ data: credentials }) => {
             if (!credentials || credentials.length === 0) {
-              handleToastComponent(
+              showSnackbar(
                 "No se encontraron credenciales registradas en el sistema con ese código."
               );
               setTimeout(() => setScanned(false), 3000);
@@ -98,11 +96,11 @@ const QrScanner: React.FC<QrScannerProps> = ({
           .catch((error) => {
             console.error("Failed to fetch credentials:", error);
 
-            handleToastComponent("Ocurrió un error al buscar la credencial.");
+            showSnackbar("Ocurrió un error al buscar la credencial.");
             setTimeout(() => setScanned(false), 3000);
           });
       } else {
-        handleToastComponent("El código QR escaneado no es válido.");
+        showSnackbar("El código QR escaneado no es válido.");
         setTimeout(() => setScanned(false), 3000);
       }
     }
@@ -132,39 +130,28 @@ const QrScanner: React.FC<QrScannerProps> = ({
     );
   }
 
-  /**
-   *
-   * @param textInfo Text to be shown in toast component. this notification starts and ends itself
-   */
-  const handleToastComponent = (textInfo: string) => {
-    setTextToast(textInfo);
-    setVisibleToast(true);
-    setTimeout(function () {
-      setVisibleToast(false);
-    }, 3000);
-  };
-
   return (
     <React.Fragment>
       <View style={styles.container}>
         {isFocused && (
-          <CameraView
-            style={styles.camera}
-            facing={facing}
-            ref={cameraRef}
-            onCameraReady={() => {
-              setIsCameraReady(true);
-            }}
-            barcodeScannerSettings={{
-              barcodeTypes: ["qr"],
-            }}
-            onBarcodeScanned={handleScan}
-            onMountError={() => {
-              setCameraFail(true);
-            }}
-          >
+          <View style={styles.cameraWrap}>
+            <CameraView
+              style={styles.camera}
+              facing={facing}
+              ref={cameraRef}
+              onCameraReady={() => {
+                setIsCameraReady(true);
+              }}
+              barcodeScannerSettings={{
+                barcodeTypes: ["qr"],
+              }}
+              onBarcodeScanned={handleScan}
+              onMountError={() => {
+                setCameraFail(true);
+              }}
+            />
             <View style={styles.buttonContainer}>
-              <View style={styles.empty_button}></View>
+              <View style={styles.empty_button} />
               <View style={styles.overlay}>
                 <View style={styles.scanArea}>
                   <View style={styles.cornerTopLeft} />
@@ -177,14 +164,10 @@ const QrScanner: React.FC<QrScannerProps> = ({
                 style={styles.flip_camera}
                 onPress={toggleCameraFacing}
               >
-                <Icon
-                  source={"camera-flip"}
-                  size={wp(10)}
-                  color="#2c25beff"
-                ></Icon>
+                <Icon source={"camera-flip"} size={wp(10)} color="#2c25beff" />
               </TouchableOpacity>
             </View>
-          </CameraView>
+          </View>
         )}
 
         {scanned && (
@@ -195,18 +178,6 @@ const QrScanner: React.FC<QrScannerProps> = ({
             </View>
           </View>
         )}
-
-        <Toast
-          visible={visibleToast}
-          position={Toast.positions.BOTTOM}
-          shadow={true}
-          animation={true}
-          hideOnPress={false}
-          duration={3000}
-          keyboardAvoiding={true}
-        >
-          {textToast}
-        </Toast>
       </View>
     </React.Fragment>
   );

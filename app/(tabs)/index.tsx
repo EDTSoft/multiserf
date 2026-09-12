@@ -3,14 +3,8 @@ import { getInscriptions } from "@/src/api/inscriptionApi";
 import { getPersons } from "@/src/api/personApi";
 import { wp } from "@/src/helpers";
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
   const [persons, setPersons] = React.useState<string | number>(0);
@@ -49,32 +43,35 @@ const HomeScreen = () => {
     setFetchingPersons(false);
   };
 
-  const fetchCredentialsAvailable = async () => {
+  const fetchCredentialStats = async () => {
     setFetchingCredentialsAvailable(true);
-    const params = "?filters[persona][$null]=true";
-    const response = await getCredentials(params)
-      .then((resp) => {
-        return resp.meta.pagination.total;
-      })
-      .catch((reason) => {
-        return 0;
-      });
-    setCredentialsAvailable(response);
-    setFetchingCredentialsAvailable(false);
+    setFetchingCredentialsUsed(true);
+    try {
+      const [all, assigned] = await Promise.all([
+        getCredentials("?pagination[pageSize]=1"),
+        getPersons(
+          "?filters[credentials][id][$notNull]=true&pagination[pageSize]=1"
+        ),
+      ]);
+      const used = assigned.meta.pagination.total;
+      const total = all.meta.pagination.total;
+      setCredentialsUsed(used);
+      setCredentialsAvailable(Math.max(total - used, 0));
+    } catch {
+      setCredentialsUsed(0);
+      setCredentialsAvailable(0);
+    } finally {
+      setFetchingCredentialsAvailable(false);
+      setFetchingCredentialsUsed(false);
+    }
+  };
+
+  const fetchCredentialsAvailable = async () => {
+    await fetchCredentialStats();
   };
 
   const fetchCredentialsUsed = async () => {
-    setFetchingCredentialsUsed(true);
-    const params = "?filters[persona][$notNull]=true";
-    const response = await getCredentials(params)
-      .then((resp) => {
-        return resp.meta.pagination.total;
-      })
-      .catch((reason) => {
-        return 0;
-      });
-    setCredentialsUsed(response);
-    setFetchingCredentialsUsed(false);
+    await fetchCredentialStats();
   };
 
   const fetchInscriptions = async () => {
@@ -194,10 +191,7 @@ const styles = StyleSheet.create({
     width: "48%",
     alignItems: "flex-start",
     elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
   },
   statLabel: {
     fontSize: 14,

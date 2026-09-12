@@ -3,15 +3,16 @@ import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
-} from "@react-navigation/native";
+} from "expo-router/react-navigation";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import "react-native-reanimated";
+import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 
 import { useColorScheme } from "@/src/components/useColorScheme";
-import { RootSiblingParent } from "react-native-root-siblings";
+import { SnackbarProvider } from "@/src/components/SnackbarProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -52,15 +53,18 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const paperTheme = colorScheme === "dark" ? MD3DarkTheme : MD3LightTheme;
 
   return (
-    <RootSiblingParent>
+    <PaperProvider theme={paperTheme}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        </Stack>
+        <SnackbarProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          </Stack>
+        </SnackbarProvider>
       </ThemeProvider>
-    </RootSiblingParent>
+    </PaperProvider>
   );
 }

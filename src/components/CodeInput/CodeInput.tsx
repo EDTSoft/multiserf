@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   LogBox,
-  SafeAreaView,
   ViewStyle,
   TouchableHighlight,
   Keyboard,
@@ -28,9 +27,9 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { getCredentials } from "@/src/api/credentialApi";
-import Toast from "react-native-root-toast";
+import { getCredentialWithPersonByCode } from "@/src/api/credentialApi";
 import { hp, wp } from "@/src/helpers";
+import { useSnackbar } from "@/src/components/SnackbarProvider";
 
 type Errors = {
   code?: string;
@@ -53,9 +52,8 @@ export const CodeInput: FC<InputCodeProps> = ({
   const [code, setCode] = useState<string>("");
   const [errors, setErrors] = useState<any>({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const [visibleToast, setVisibleToast] = React.useState(false);
-  const [textToast, setTextToast] = React.useState("");
   const [processing, setProcessing] = React.useState(false);
+  const { showSnackbar } = useSnackbar();
   const [touched, setTouched] = useState<boolean>(false);
 
   React.useEffect(() => {
@@ -81,11 +79,10 @@ export const CodeInput: FC<InputCodeProps> = ({
     if (isFormValid) {
       setProcessing(true);
       if (code !== null && code.length > 0) {
-        const params = `?filters[code][$eq]=${code}&populate[persona][populate][0]=inscription`;
-        getCredentials(params)
+        getCredentialWithPersonByCode(code)
           .then(({ data: credentials }) => {
             if (!credentials || credentials.length === 0) {
-              handleToastComponent(
+              showSnackbar(
                 "No se encontraron credenciales registradas en el sistema con ese código."
               );
               setTimeout(() => setProcessing(false), 3000);
@@ -99,29 +96,17 @@ export const CodeInput: FC<InputCodeProps> = ({
           .catch((error) => {
             console.error("Failed to fetch credentials:", error);
 
-            handleToastComponent("Ocurrió un error al buscar la credencial.");
+            showSnackbar("Ocurrió un error al buscar la credencial.");
             setTimeout(() => setProcessing(false), 3000);
           });
       } else {
-        handleToastComponent("El formato del código no es válido.");
+        showSnackbar("El formato del código no es válido.");
         setTimeout(() => setProcessing(false), 3000);
       }
     } else {
-      handleToastComponent("El código es requerido.");
+      showSnackbar("El código es requerido.");
       setTimeout(() => setProcessing(false), 3000);
     }
-  };
-
-  /**
-   *
-   * @param textInfo Text to be shown in toast component. this notification starts and ends itself
-   */
-  const handleToastComponent = (textInfo: string) => {
-    setTextToast(textInfo);
-    setVisibleToast(true);
-    setTimeout(function () {
-      setVisibleToast(false);
-    }, 3000);
   };
 
   return (
@@ -158,18 +143,6 @@ export const CodeInput: FC<InputCodeProps> = ({
           "Verificar"
         )}
       </Button>
-
-      <Toast
-        visible={visibleToast}
-        position={Toast.positions.BOTTOM}
-        shadow={true}
-        animation={true}
-        hideOnPress={false}
-        duration={3000}
-        keyboardAvoiding={true}
-      >
-        {textToast}
-      </Toast>
     </View>
   );
 };

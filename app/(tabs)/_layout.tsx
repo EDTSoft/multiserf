@@ -12,7 +12,14 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return (
+    <FontAwesome
+      size={28}
+      style={{ marginBottom: -3 }}
+      name={props.name}
+      color={String(props.color)}
+    />
+  );
 }
 
 export default function TabLayout() {
@@ -53,14 +60,18 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Inicio",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="home" color={String(color)} />
+          ),
         }}
       />
       <Tabs.Screen
         name="verify"
         options={{
           title: "Verificar credencial",
-          tabBarIcon: ({ color }) => <TabBarIcon name="qrcode" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="qrcode" color={String(color)} />
+          ),
         }}
       />
     </Tabs>

@@ -1,16 +1,11 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  Button,
-  Pressable,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, Button, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Text, View } from "@/src/components/Themed";
 import QRScanner, { CameraState } from "@/src/components/QrScanner";
 import { wp } from "@/src/helpers";
 import Colors from "@/src/constants/Colors";
+import { useColorScheme } from "@/src/components/useColorScheme";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import { ActivityIndicator } from "react-native-paper";
@@ -122,7 +117,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   qrContainer: {
+    width: wp(90),
     height: wp(90),
+    overflow: "hidden",
   },
   title: {
     fontSize: 20,
