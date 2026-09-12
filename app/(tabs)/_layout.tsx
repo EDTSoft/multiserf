@@ -20,15 +20,14 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: false, // useClientOnlyValue(false, true),
+        headerShown: false,
       }}
     >
-      <Tabs.Screen
-        name="index"
+      {/* <Tabs.Screen
+        name="two"
         options={{
           title: "Acreditar",
           tabBarIcon: ({ color }) => (
@@ -49,9 +48,9 @@ export default function TabLayout() {
             </Link>
           ),
         }}
-      />
+      />*/}
       <Tabs.Screen
-        name="two"
+        name="index"
         options={{
           title: "Inicio",
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
