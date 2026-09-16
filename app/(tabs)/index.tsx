@@ -38,10 +38,8 @@ const HomeScreen = () => {
         setNetworkError(null);
         return resp.meta.pagination.total;
       })
-      .catch((reason) => {
-        setNetworkError(
-          reason instanceof Error ? reason.message : "Error de red"
-        );
+      .catch(() => {
+        setNetworkError("Falló la conexión");
         return 0;
       });
     setPersons(response);
@@ -63,10 +61,8 @@ const HomeScreen = () => {
       setCredentialsUsed(used);
       setCredentialsAvailable(Math.max(total - used, 0));
       setNetworkError(null);
-    } catch (reason) {
-      setNetworkError(
-        reason instanceof Error ? reason.message : "Error de red"
-      );
+    } catch {
+      setNetworkError("Falló la conexión");
       setCredentialsUsed(0);
       setCredentialsAvailable(0);
     } finally {
@@ -90,10 +86,8 @@ const HomeScreen = () => {
         setNetworkError(null);
         return resp.meta.pagination.total;
       })
-      .catch((reason) => {
-        setNetworkError(
-          reason instanceof Error ? reason.message : "Error de red"
-        );
+      .catch(() => {
+        setNetworkError("Falló la conexión");
         return 0;
       });
     setInscriptions(response);

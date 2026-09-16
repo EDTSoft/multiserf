@@ -96,11 +96,7 @@ export const CodeInput: FC<InputCodeProps> = ({
           .catch((error) => {
             console.error("Failed to fetch credentials:", error);
 
-            showSnackbar(
-              error instanceof Error
-                ? error.message
-                : "Ocurrió un error al buscar la credencial."
-            );
+            showSnackbar("Falló la conexión");
             setTimeout(() => setProcessing(false), 3000);
           });
       } else {

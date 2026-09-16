@@ -96,11 +96,7 @@ const QrScanner: React.FC<QrScannerProps> = ({
           .catch((error) => {
             console.error("Failed to fetch credentials:", error);
 
-            showSnackbar(
-              error instanceof Error
-                ? error.message
-                : "Ocurrió un error al buscar la credencial."
-            );
+            showSnackbar("Falló la conexión");
             setTimeout(() => setScanned(false), 3000);
           });
       } else {
