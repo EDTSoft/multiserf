@@ -17,10 +17,12 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
+        "android.permission.INTERNET",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.edtsoft.multiserf"
+      "package": "com.edtsoft.multiserf",
+      "usesCleartextTraffic": true
     },
     "web": {
       "bundler": "metro",
