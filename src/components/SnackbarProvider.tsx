@@ -33,7 +33,7 @@ export function SnackbarProvider({ children }: { children: React.ReactNode }) {
   return (
     <SnackbarContext.Provider value={value}>
       {children}
-      <Snackbar visible={visible} onDismiss={onDismiss} duration={3000}>
+      <Snackbar visible={visible} onDismiss={onDismiss} duration={6000}>
         {message}
       </Snackbar>
     </SnackbarContext.Provider>

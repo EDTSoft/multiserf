@@ -1,7 +1,5 @@
 import { GetPersonsResponse, Person } from "../models/Person";
-import { enviroment } from "../enviroment/enviroment";
-
-const { API_URL, TOKEN } = enviroment;
+import { apiFetch } from "./client";
 
 /**
  *
@@ -11,12 +9,8 @@ const { API_URL, TOKEN } = enviroment;
 export async function getPersons(
   params: string = ""
 ): Promise<GetPersonsResponse> {
-  const response = await fetch(`${API_URL}/people${params}`, {
+  const response = await apiFetch(`/people${params}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
-    },
   });
 
   if (!response.ok) {
@@ -27,12 +21,8 @@ export async function getPersons(
 }
 
 export async function getPersonById(id: number): Promise<Person> {
-  const response = await fetch(`${API_URL}/people/${id}`, {
+  const response = await apiFetch(`/people/${id}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
-    },
   });
 
   if (!response.ok) {

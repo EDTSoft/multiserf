@@ -1,8 +1,6 @@
 import { GetCredentialsResponse, Credential } from "../models/Credential";
-import { enviroment } from "../enviroment/enviroment";
+import { apiFetch } from "./client";
 import { getPersons } from "./personApi";
-
-const { API_URL, TOKEN } = enviroment;
 
 async function readErrorMessage(response: Response, fallback: string) {
   try {
@@ -21,12 +19,8 @@ async function readErrorMessage(response: Response, fallback: string) {
 export async function getCredentials(
   params: string = ""
 ): Promise<GetCredentialsResponse> {
-  const response = await fetch(`${API_URL}/credentials${params}`, {
+  const response = await apiFetch(`/credentials${params}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
-    },
   });
 
   if (!response.ok) {
@@ -67,12 +61,8 @@ export async function getCredentialWithPersonByCode(
 }
 
 export async function getCredentialById(id: number): Promise<Credential> {
-  const response = await fetch(`${API_URL}/credentials/${id}`, {
+  const response = await apiFetch(`/credentials/${id}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
-    },
   });
 
   if (!response.ok) {

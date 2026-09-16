@@ -22,6 +22,7 @@ const HomeScreen = () => {
     React.useState(true);
   const [fetchingCredentialsAvailable, setFetchingCredentialsAvailable] =
     React.useState(true);
+  const [networkError, setNetworkError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     fetchPersons();
@@ -34,9 +35,13 @@ const HomeScreen = () => {
     setFetchingPersons(true);
     const response = await getPersons()
       .then((resp) => {
+        setNetworkError(null);
         return resp.meta.pagination.total;
       })
       .catch((reason) => {
+        setNetworkError(
+          reason instanceof Error ? reason.message : "Error de red"
+        );
         return 0;
       });
     setPersons(response);
@@ -57,7 +62,11 @@ const HomeScreen = () => {
       const total = all.meta.pagination.total;
       setCredentialsUsed(used);
       setCredentialsAvailable(Math.max(total - used, 0));
-    } catch {
+      setNetworkError(null);
+    } catch (reason) {
+      setNetworkError(
+        reason instanceof Error ? reason.message : "Error de red"
+      );
       setCredentialsUsed(0);
       setCredentialsAvailable(0);
     } finally {
@@ -78,9 +87,13 @@ const HomeScreen = () => {
     setFetchingInscriptions(true);
     const response = await getInscriptions()
       .then((resp) => {
+        setNetworkError(null);
         return resp.meta.pagination.total;
       })
       .catch((reason) => {
+        setNetworkError(
+          reason instanceof Error ? reason.message : "Error de red"
+        );
         return 0;
       });
     setInscriptions(response);
@@ -96,6 +109,10 @@ const HomeScreen = () => {
           resizeMode="contain"
         />
       </View>
+
+      {networkError ? (
+        <Text style={styles.networkError}>{networkError}</Text>
+      ) : null}
 
       <View style={styles.statsContainer}>
         <Pressable
@@ -170,6 +187,14 @@ const styles = StyleSheet.create({
   headerImage: {
     width: wp(90),
     height: wp(90),
+  },
+  networkError: {
+    color: "#b3261e",
+    backgroundColor: "#fceeee",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    fontSize: 13,
   },
   title: {
     fontSize: 18,

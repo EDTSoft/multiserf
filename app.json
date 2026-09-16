@@ -2,7 +2,7 @@
   "expo": {
     "name": "MultiSerF",
     "slug": "MultiSerF",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "multiserf",
@@ -54,7 +54,16 @@
       ],
       "expo-font",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "./plugins/withCleartextTraffic"
     ],
     "experiments": {
       "typedRoutes": true

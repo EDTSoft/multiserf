@@ -1,17 +1,11 @@
-import { enviroment } from "../enviroment/enviroment";
 import { GetInscriptionsResponse, Inscription } from "../models/Inscription";
-
-const { API_URL, TOKEN } = enviroment;
+import { apiFetch } from "./client";
 
 export async function getInscriptions(
   params: string = ""
 ): Promise<GetInscriptionsResponse> {
-  const response = await fetch(`${API_URL}/inscriptions${params}`, {
+  const response = await apiFetch(`/inscriptions${params}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
-    },
   });
 
   if (!response.ok) {
@@ -22,12 +16,8 @@ export async function getInscriptions(
 }
 
 export async function getInscriptionById(id: number): Promise<Inscription> {
-  const response = await fetch(`${API_URL}/inscriptions/${id}`, {
+  const response = await apiFetch(`/inscriptions/${id}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
-    },
   });
 
   if (!response.ok) {
